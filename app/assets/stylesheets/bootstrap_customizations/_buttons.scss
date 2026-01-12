@@ -1,0 +1,73 @@
+// Redefine these .btn-#{variant} forcibly because there is no way to control hover-focus-active
+// color directly. Also, gradients.
+
+.btn-primary {
+  @include button-variant(
+    $btn-primary-hover,
+    $white,
+    $btn-primary-hover,
+    $white,
+    $btn-primary-hover,
+    $white
+  );
+  background-color: $btn-primary-gradient-end;
+  border-radius: 8px;
+  padding: 0.5rem 2rem;
+
+  &:hover {
+    background: $palette-gray-80;
+  }
+}
+
+.btn-secondary {
+  @include button-variant(
+    $btn-secondary,
+    $white,
+    $btn-secondary-hover,
+    $white,
+    $btn-secondary-hover,
+    $white
+  );
+  color: $palette-blue;
+  border-radius: 8px;
+  font-size: 0.86rem;
+
+  &:hover {
+    background: $palette-blue;
+  }
+}
+
+.btn-outline-secondary {
+  background: $alert-bg;
+  color: $tag-color-1;
+}
+
+.btn-error {
+  @include button-variant(
+    $btn-error,
+    $white,
+    $btn-error-hover,
+    $white,
+    $btn-error-hover,
+    $white
+  );
+}
+
+.btn-info {
+  @include button-variant(
+    $btn-info,
+    $white,
+    $btn-info-hover,
+    $white,
+    $btn-info-hover,
+    $white
+  );
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-error {
+  //@mixin hover-focus-active {
+  //  color: $white !important;
+  //}
+}

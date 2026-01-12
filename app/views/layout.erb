@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EOSC Widgets</title>
+    <link rel="stylesheet" href="/assets/application.css">
+  </head>
+  <body data-controller="color">
+    <header class="p-3 mb-4">
+      <div class="container d-flex justify-content-between align-items-center">
+        <h1 class="mb-0">
+          <a href="/" class="text-decoration-none text-brand">EOSC Widgets</a>
+        </h1>
+        <nav>
+          <ul class="nav">
+            <li class="nav-item"><a href="/" class="nav-link text-brand">Home</a></li>
+            <% if policy(:application).admin? %>
+              <li class="nav-item"><a href="/identity_providers" class="nav-link text-brand">Identity Providers</a></li>
+              <li class="nav-item"><a href="/services" class="nav-link text-brand">Services</a></li>
+            <% end %>
+            <% if signed_in? %>
+              <li class="nav-item"><a href="/favourites" class="nav-link text-brand">Favourites</a></li>
+              <li class="nav-item"><a href="/logout" class="nav-link text-brand">Logout</a></li>
+            <% else %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-brand" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Login
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <% IdentityProvider.order(:name).each do |idp| %>
+                    <li><a class="dropdown-item" href="/auth/<%= idp.slug %>" data-turbo="false"><%= idp.name %></a></li>
+                  <% end %>
+                  <% if IdentityProvider.count == 0 %>
+                    <li><span class="dropdown-item disabled">No login methods available</span></li>
+                  <% end %>
+                </ul>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <%= yield %>
+    </main>
+
+    <script type="module" src="/assets/application.js"></script>
+  </body>
+  </html>

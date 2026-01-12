@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Identity Providers</h2>
+  <a href="/identity_providers/new" class="btn btn-success">Add Identity Provider</a>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Abbreviation</th>
+      <th>PID</th>
+      <th>URL</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @identity_providers.each do |idp| %>
+      <tr>
+        <td><%= idp.name %></td>
+        <td><%= idp.abbreviation %></td>
+        <td><%= idp.pid %></td>
+        <td><a href="<%= idp.url %>" target="_blank"><%= idp.url %></a></td>
+        <td><%= idp.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+        <td>
+          <a href="/identity_providers/<%= idp.slug || idp.id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+        </td>
+      </tr>
+    <% end %>
+    <% if @identity_providers.empty? %>
+      <tr>
+        <td colspan="6" class="text-center">No identity providers found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

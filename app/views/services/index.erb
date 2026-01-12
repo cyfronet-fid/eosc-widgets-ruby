@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Services</h2>
+  <a href="/services/new" class="btn btn-success">Add Service</a>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Abbreviation</th>
+      <th>PID</th>
+      <th>URL</th>
+      <th>Identity Provider</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @services.each do |service| %>
+      <% 
+        is_favourite = false
+        if signed_in?
+          is_favourite = current_user.favourites.exists?(resource_id: service.pid, resource_type: 'service')
+        end
+      %>
+      <tr>
+        <td><%= service.name %></td>
+        <td><%= service.abbreviation %></td>
+        <td><%= service.pid %></td>
+        <td><a href="<%= service.url %>" target="_blank"><%= service.url %></a></td>
+        <td><%= service.identity_provider&.name %></td>
+        <td><%= service.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+        <td>
+          <div class="d-flex gap-2">
+            <a href="/services/<%= service.slug || service.id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+              
+            <% if signed_in? %>
+              <% if is_favourite %>
+                <form action="/api/favourites" method="post" class="d-inline">
+                  <input type="hidden" name="_method" value="delete">
+                  <input type="hidden" name="resource_id" value="<%= service.pid %>">
+                  <input type="hidden" name="resource_type" value="service">
+                  <button type="submit" class="btn btn-sm btn-warning" title="Remove from favourites">★</button>
+                </form>
+              <% else %>
+                <form action="/api/favourites" method="post" class="d-inline">
+                  <input type="hidden" name="favourite[resource_id]" value="<%= service.pid %>">
+                  <input type="hidden" name="favourite[resource_type]" value="service">
+                  <input type="hidden" name="favourite[title]" value="<%= service.name %>">
+                  <button type="submit" class="btn btn-sm btn-outline-warning" title="Add to favourites">☆</button>
+                </form>
+              <% end %>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+    <% if @services.empty? %>
+      <tr>
+        <td colspan="7" class="text-center">No services found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

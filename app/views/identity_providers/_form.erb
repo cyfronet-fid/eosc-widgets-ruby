@@ -1,0 +1,35 @@
+<form action="<%= @identity_provider.new_record? ? '/identity_providers' : "/identity_providers/#{@identity_provider.id}" %>" method="post" class="card card-body">
+  <% unless @identity_provider.new_record? %>
+    <input type="hidden" name="_method" value="put">
+  <% end %>
+  <div class="mb-3">
+    <label for="idp_name" class="form-label">Name</label>
+    <input type="text" name="identity_provider[name]" id="idp_name" class="form-control" value="<%= @identity_provider.name %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="idp_abbr" class="form-label">Abbreviation</label>
+    <input type="text" name="identity_provider[abbreviation]" id="idp_abbr" class="form-control" value="<%= @identity_provider.abbreviation %>">
+  </div>
+
+  <div class="mb-3">
+    <label for="idp_pid" class="form-label">PID</label>
+    <input type="text" name="identity_provider[pid]" id="idp_pid" class="form-control" value="<%= @identity_provider.pid %>">
+  </div>
+
+  <div class="mb-3">
+    <label for="idp_url" class="form-label">URL</label>
+    <input type="url" name="identity_provider[url]" id="idp_url" class="form-control" value="<%= @identity_provider.url %>">
+  </div>
+
+  <div class="mb-3">
+    <label for="idp_config" class="form-label">Config (JSON)</label>
+    <textarea name="identity_provider[config]" id="idp_config" class="form-control" rows="10"><%= JSON.pretty_generate(@identity_provider.config || {}) %></textarea>
+    <div class="form-text">Enter configuration in JSON format.</div>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <a href="/identity_providers" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary"><%= @identity_provider.new_record? ? 'Create' : 'Update' %> Identity Provider</button>
+  </div>
+</form>

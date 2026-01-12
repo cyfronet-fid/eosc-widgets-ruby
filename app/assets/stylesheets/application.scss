@@ -1,0 +1,31 @@
+@import "variables";
+// Import Bootstrap
+
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap_customizations/index";
+
+.text-brand {
+  color: var(--brand);
+}
+
+body {
+  padding-bottom: 24px;
+}
+
+header {
+  background: $header-bg;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 16px;
+  padding: 12px 0;
+
+  h1 {
+    color: var(--brand);
+    margin: 0;
+    font-size: 20px;
+  }
+}
+
+main {
+  // Use Bootstrap container classes or custom max-width
+  @extend .container;
+}

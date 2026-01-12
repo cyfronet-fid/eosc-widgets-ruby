@@ -1,0 +1,13 @@
+<h2>New Identity Provider</h2>
+
+<% if @identity_provider.errors.any? %>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      <% @identity_provider.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= render_partial 'identity_providers/form' %>
