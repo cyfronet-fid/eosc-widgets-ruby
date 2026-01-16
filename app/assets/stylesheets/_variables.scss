@@ -5,6 +5,7 @@
 $brand: #144b9e;
 $header-bg: white;
 $border-color: #e5e7eb;
+$bs-badge-color: #000;
 
 $font-family-sans-serif: "Inter", "Helvetica Neue", "Arial", sans-serif;
 
@@ -209,4 +210,5 @@ $landing-04: #010b65;
 :root {
   --brand: #{$brand};
   --background: #{$secondary};
+  --bs-badge-color: #{$bs-badge-color};
 }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,52 +10,56 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 20_260_112_101_000) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_16_082435) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'identity_providers', force: :cascade do |t|
-    t.string 'name'
-    t.string 'abbreviation'
-    t.string 'pid'
-    t.string 'url'
-    t.jsonb 'config'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "endpoints", force: :cascade do |t|
+    t.string "name"
+    t.string "abbreviation"
+    t.string "pid"
+    t.string "url"
+    t.bigint "identity_provider_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "slug"
+    t.index ["identity_provider_id"], name: "index_endpoints_on_identity_provider_id"
+    t.index ["slug"], name: "index_endpoints_on_slug", unique: true
   end
 
-  create_table 'services', force: :cascade do |t|
-    t.string 'name'
-    t.string 'abbreviation'
-    t.string 'pid'
-    t.string 'url'
-    t.bigint 'identity_provider_id'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['identity_provider_id'], name: 'index_services_on_identity_provider_id'
+  create_table "identity_providers", force: :cascade do |t|
+    t.string "name"
+    t.string "abbreviation"
+    t.string "pid"
+    t.string "url"
+    t.jsonb "config"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "slug"
+    t.index ["slug"], name: "index_identity_providers_on_slug", unique: true
   end
 
-  create_table 'uids', force: :cascade do |t|
-    t.string 'value', null: false
-    t.bigint 'user_id', null: false
-    t.bigint 'identity_provider_id', null: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index %w[identity_provider_id value], name: 'index_uids_on_identity_provider_id_and_value', unique: true
-    t.index ['identity_provider_id'], name: 'index_uids_on_identity_provider_id'
-    t.index ['user_id'], name: 'index_uids_on_user_id'
+  create_table "uids", force: :cascade do |t|
+    t.string "value", null: false
+    t.bigint "user_id", null: false
+    t.bigint "identity_provider_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identity_provider_id", "value"], name: "index_uids_on_identity_provider_id_and_value", unique: true
+    t.index ["identity_provider_id"], name: "index_uids_on_identity_provider_id"
+    t.index ["user_id"], name: "index_uids_on_user_id"
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.string 'first_name'
-    t.string 'last_name'
-    t.string 'email'
-    t.integer 'roles_mask'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "users", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.integer "roles_mask"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_foreign_key 'services', 'identity_providers'
-  add_foreign_key 'uids', 'identity_providers'
-  add_foreign_key 'uids', 'users'
+  add_foreign_key "endpoints", "identity_providers"
+  add_foreign_key "uids", "identity_providers"
+  add_foreign_key "uids", "users"
 end

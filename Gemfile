@@ -45,6 +45,7 @@ group :development, :test do
   gem 'byebug'
   gem 'haml_lint', require: false
   gem 'minitest'
+  gem 'minitest-mock'
   gem 'minitest-reporters'
   gem 'overcommit', require: false
   gem 'prettier', require: false

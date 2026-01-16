@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>My Favourites</h2>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Type</th>
+        <th>Authors</th>
+        <th>Access Right</th>
+        <th>Links</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @favourites.each do |fav| %>
+        <tr>
+          <td>
+            <strong><%= fav.title || "Untitled" %></strong>
+            <br>
+            <small class="text-muted">ID: <%= fav.pid %></small>
+          </td>
+          <td>
+            <span class="badge bg-primary"><%= fav.type %></span>
+          </td>
+          <td><%= Array(fav.authors).join(', ') %></td>
+          <td>
+            <% if fav.best_access_right %>
+              <span class="badge bg-secondary"><%= fav.best_access_right %></span>
+            <% end %>
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              <% Array(fav.links).each do |url| %>
+                <a href="<%= url %>" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+              <% end %>
+              <form action="/api/favourites" method="post" class="d-inline" data-turbo-confirm="Are you sure you want to remove this from favourites?">
+                <input type="hidden" name="_method" value="delete">
+                <input type="hidden" name="pid" value="<%= fav.pid %>">
+                <input type="hidden" name="type" value="<%= fav.type %>">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      <% if @favourites.empty? %>
+        <tr>
+          <td colspan="5" class="text-center py-4 text-muted">
+            You don't have any favourites yet.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

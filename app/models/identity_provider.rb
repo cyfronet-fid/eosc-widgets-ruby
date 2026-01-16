@@ -5,7 +5,7 @@ class IdentityProvider < ApplicationRecord
   friendly_id :name, use: :slugged
 
   # Shared identity provider model for all widgets
-  has_many :services, dependent: :destroy
+  has_many :endpoints, dependent: :destroy
   has_many :uids, dependent: :destroy
   has_many :users, through: :uids
 

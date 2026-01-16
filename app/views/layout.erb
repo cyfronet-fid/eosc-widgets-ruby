@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/assets/application.css">
   </head>
   <body data-controller="color">
+    <%= render_partial "confirm_modal" %>
     <header class="p-3 mb-4">
       <div class="container d-flex justify-content-between align-items-center">
         <h1 class="mb-0">
@@ -17,7 +18,7 @@
             <li class="nav-item"><a href="/" class="nav-link text-brand">Home</a></li>
             <% if policy(:application).admin? %>
               <li class="nav-item"><a href="/identity_providers" class="nav-link text-brand">Identity Providers</a></li>
-              <li class="nav-item"><a href="/services" class="nav-link text-brand">Services</a></li>
+              <li class="nav-item"><a href="/endpoints" class="nav-link text-brand">Endpoints</a></li>
             <% end %>
             <% if signed_in? %>
               <li class="nav-item"><a href="/favourites" class="nav-link text-brand">Favourites</a></li>

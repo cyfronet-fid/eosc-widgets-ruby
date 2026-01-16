@@ -1,0 +1,24 @@
+<dialog id="confirm" class="confirm-modal" data-controller="form-redirect">
+  <div class="row">
+    <div class="col-12 col-md-11"></div>
+    <div class="col-12 col-md-1">
+      <button class="close modal__backdrop confirm-cancel float-right" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="modal__content">
+        <h3 id="confirm-title" class="confirm-title">Are you sure?</h3>
+        <div id="confirm-body" class="confirm-body"></div>
+      </div>
+      <div class="modal-actions">
+        <button id="dismiss-btn" class="btn btn-secondary close modal__backdrop confirm-cancel" type="button">
+          Cancel
+        </button>
+        <button id="confirm-accept" class="btn btn-primary" data-e2e="confirm-accept">Yes, I'm Sure</button>
+      </div>
+    </div>
+  </div>
+</dialog>
