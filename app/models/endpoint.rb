@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class Service < ApplicationRecord
+class Endpoint < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: :slugged
 
-  # Shared service model for all widgets
+  # Shared endpoint model for all widgets
   belongs_to :identity_provider
 
   validates :name, :url, presence: true
@@ -15,6 +15,6 @@ class Service < ApplicationRecord
   private
 
   def log_change
-    WIDGETS_LOGGER.info "Service change: #{inspect}" if defined?(WIDGETS_LOGGER)
+    WIDGETS_LOGGER.info "Endpoint change: #{inspect}" if defined?(WIDGETS_LOGGER)
   end
 end

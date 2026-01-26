@@ -1,0 +1,13 @@
+<h2>New Endpoint</h2>
+
+<% if @endpoint.errors.any? %>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      <% @endpoint.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= render_partial 'endpoints/form' %>
