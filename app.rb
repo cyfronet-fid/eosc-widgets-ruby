@@ -13,6 +13,8 @@ require 'erb'
 require 'securerandom'
 require 'pundit'
 require 'friendly_id'
+require 'sprockets'
+require 'sprockets-helpers'
 
 require_relative 'app/concerns/authentication'
 require_relative 'app/helpers/application_helper'
@@ -22,6 +24,28 @@ require_relative 'app/routes/application_routes'
 set :root, File.dirname(__FILE__)
 set :views, File.join(settings.root, 'app', 'views')
 set :public_folder, File.join(settings.root, 'public')
+
+# Sprockets configuration
+configure do
+  set :assets, Sprockets::Environment.new
+  # JS and CSS are pre-built by esbuild/sass into tmp/assets
+  settings.assets.append_path 'tmp/assets'
+  settings.assets.append_path 'app/assets/images'
+  settings.assets.append_path 'node_modules'
+
+  Sprockets::Helpers.configure do |config|
+    config.environment = settings.assets
+    config.prefix = '/assets'
+    config.digest = true
+  end
+end
+
+helpers Sprockets::Helpers
+
+get '/assets/*' do
+  env['PATH_INFO'].sub!('/assets', '')
+  settings.assets.call(env)
+end
 
 # Logging configuration
 configure do
@@ -94,10 +118,16 @@ configure do
       end
     else
       warn "No environment '#{env}' in config/database.yml. Falling back to DATABASE_URL."
-      ActiveRecord::Base.establish_connection(ENV['DATABASE_URL']) if ENV['DATABASE_URL']
+      if ENV['DATABASE_URL'] && !ENV['DATABASE_URL'].empty?
+        ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+      elsif settings.production?
+        raise "Database configuration for '#{env}' not found in config/database.yml and DATABASE_URL is not set."
+      end
     end
   elsif ENV['DATABASE_URL'] && !ENV['DATABASE_URL'].empty?
     ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+  elsif settings.production?
+    raise 'No database configuration found (config/database.yml or DATABASE_URL). ActiveRecord cannot connect.'
   else
     warn 'No database configuration found (config/database.yml or DATABASE_URL). ActiveRecord will not connect.'
   end
@@ -135,7 +165,3 @@ Dir[File.join(settings.root, 'config', 'initializers', '*.rb')].sort.each { |f| 
 
 # Load policies
 Dir[File.join(settings.root, 'app', 'policies', '*.rb')].sort.each { |f| require f }
-
-post '/subscribe' do
-  erb :greet
-end

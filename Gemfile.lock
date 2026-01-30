@@ -316,13 +316,15 @@ GEM
       prism (~> 1.7)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
+    sassc (2.4.0)
+      ffi (~> 1.9)
     securerandom (0.4.1)
-    sidekiq (8.0.10)
-      connection_pool (>= 2.5.0)
-      json (>= 2.9.0)
-      logger (>= 1.6.2)
-      rack (>= 3.1.0)
-      redis-client (>= 0.23.2)
+    sidekiq (7.3.10)
+      base64
+      connection_pool (>= 2.3.0, < 3)
+      logger
+      rack (>= 2.2.4, < 3.3)
+      redis-client (>= 0.23.0, < 1)
     sinatra (4.2.1)
       logger (>= 1.6.0)
       mustermann (~> 3.0)
@@ -333,6 +335,12 @@ GEM
     sinatra-activerecord (2.0.28)
       activerecord (>= 4.1)
       sinatra (>= 1.0)
+    sprockets (4.2.2)
+      concurrent-ruby (~> 1.0)
+      logger
+      rack (>= 2.2.4, < 4)
+    sprockets-helpers (1.4.0)
+      sprockets (>= 2.2)
     sshkit (1.25.0)
       base64
       logger
@@ -421,9 +429,12 @@ DEPENDENCIES
   redis (>= 4.0.1)
   role_model
   rubocop
+  sassc
   sidekiq
   sinatra
   sinatra-activerecord
+  sprockets (~> 4.0)
+  sprockets-helpers
   timeout (~> 0.4)
   zeitwerk
 
