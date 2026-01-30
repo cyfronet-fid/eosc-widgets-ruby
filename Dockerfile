@@ -24,6 +24,8 @@ RUN bundle install
 # Then copy the rest of the application
 COPY . .
 
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rake assets:precompile
+
 EXPOSE 9292
 
 # Basic healthcheck hitting the root page

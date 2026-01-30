@@ -106,3 +106,55 @@ namespace :queue do
     end
   end
 end
+
+namespace :assets do
+  desc 'Precompile assets'
+  task :precompile do
+    require 'fileutils'
+    # App is already loaded in Rakefile
+
+    puts 'Installing npm dependencies...'
+    system 'npm install'
+
+    puts 'Building JS and CSS with esbuild and sass...'
+    FileUtils.mkdir_p('tmp/assets')
+    system 'npx esbuild app/assets/javascript/application.js --bundle --minify --outdir=tmp/assets'
+    system 'npx sass app/assets/stylesheets/application.scss tmp/assets/application.css --load-path=node_modules'
+
+    target = File.join(Sinatra::Application.settings.public_folder, 'assets')
+    FileUtils.mkdir_p(target)
+
+    manifest = Sprockets::Manifest.new(Sinatra::Application.settings.assets, target)
+
+    # Assets to compile
+    assets_to_compile = ['application.js', 'application.css']
+
+    # Also add images and fonts using common extensions from app/assets/images
+    # We skip node_modules to avoid precompiling thousands of unused assets
+    images_path = File.join(Sinatra::Application.settings.root, 'app', 'assets', 'images')
+    if Dir.exist?(images_path)
+      Dir.glob("#{images_path}/**/*").each do |file|
+        next if File.directory?(file)
+        logical_path = file.sub("#{images_path}/", "")
+        if logical_path =~ /\.(?:png|jpg|jpeg|gif|svg|eot|ttf|woff|woff2)$/
+          assets_to_compile << logical_path
+        end
+      end
+    end
+    assets_to_compile.uniq!
+
+    puts "Precompiling assets to #{target}..."
+    manifest.compile(assets_to_compile)
+    puts 'Assets precompiled!'
+  end
+
+  desc 'Clean assets'
+  task :clean do
+    require 'fileutils'
+    target = File.join(Sinatra::Application.settings.public_folder, 'assets')
+    if Dir.exist?(target)
+      FileUtils.rm_rf(target)
+      puts "Cleaned #{target}"
+    end
+  end
+end

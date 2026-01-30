@@ -30,6 +30,9 @@ gem 'activesupport'
 gem 'pg'
 gem 'role_model'
 gem 'sinatra-activerecord'
+gem 'sprockets', '~> 4.0'
+gem 'sprockets-helpers'
+gem 'sassc'
 
 # API
 gem 'active_model_serializers'
