@@ -12,9 +12,14 @@ ENV APP_HOME=/app \
 
 WORKDIR $APP_HOME
 
-# System dependencies for building native gems (pg) and SSL
+# System dependencies for building native gems (pg, psych) and SSL
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends build-essential libpq-dev ca-certificates curl && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libyaml-dev \
+    ca-certificates \
+    curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Install gems first to leverage Docker layer caching

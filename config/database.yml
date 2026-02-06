@@ -91,6 +91,7 @@ test:
 #
 production:
   <<: *default
-  database: eosc_widgets_production
-  username: ew
-  password: <%= ENV["EW_DB_PASSWORD"] %>
+  database: <%= ENV["EW_DB"] || "eosc_widgets_production" %>
+  host: <%= ENV["EW_DB_HOST"] || "localhost" %>
+  username: <%= ENV["EW_DB_USERNAME"] || "ew" %>
+  password: <%= ENV["EW_DB_PASSWORD"] || "ew" %>
