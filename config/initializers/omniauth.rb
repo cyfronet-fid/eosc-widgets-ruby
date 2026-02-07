@@ -19,7 +19,7 @@ if ENV['RACK_ENV'] == 'test'
         idp.config = { client_id: 'test' }.to_json
       end
     end
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
     # Ignore if DB not ready
   end
 end
@@ -45,7 +45,7 @@ OmniAuth.config.request_validation_phase = proc do |env|
       # Actually, OmniAuth::AuthenticityTokenProtection is a middleware in the stack.
     end
   end
-rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
   # Skip if database is not ready
 end
 
@@ -82,7 +82,7 @@ begin
     allowed_origins << 'http://127.0.0.1:9292'
     allowed_origins << 'https://127.0.0.1:9292'
   end
-rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
   # Skip if database is not ready
 end
 
@@ -171,7 +171,7 @@ if Sinatra::Application.middleware.none? { |m| m.first == OmniAuth::Builder }
         OmniAuth.config.logger.info "IdentityProvider successfully initialized: #{idp.slug}"
       end
     end
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
     OmniAuth.config.logger.warn 'Database not ready, skipping dynamic OmniAuth configuration'
   rescue StandardError => e
     OmniAuth.config.logger.error "OmniAuth configuration failed: #{e.message}"

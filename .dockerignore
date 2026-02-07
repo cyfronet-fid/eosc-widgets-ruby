@@ -1,0 +1,11 @@
+.env
+.git
+.gitignore
+log/*
+tmp/*
+node_modules/*
+public/assets/*
+Dockerfile
+docker-compose.yml
+test/*
+vendor/bundle/*
