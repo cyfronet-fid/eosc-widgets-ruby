@@ -30,5 +30,26 @@ services:
       timeout: 5s
       retries: 10
 
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "9292:9292"
+    environment:
+      - EW_DB_HOST=postgres
+      - EW_DB_PORT=5432
+      - EW_DB_USERNAME=${EW_DB_USERNAME:-ew}
+      - EW_DB_PASSWORD=${EW_DB_PASSWORD:-ew}
+      - EW_DB=${POSTGRES_DB:-eosc_widgets}
+      - DATABASE_URL=postgres://${EW_DB_USERNAME:-ew}:${EW_DB_PASSWORD:-ew}@postgres:5432/${POSTGRES_DB:-eosc_widgets}
+      - REDIS_URL=redis://redis:6379/0
+      - SESSION_SECRET=${SESSION_SECRET:-a_stable_secret_for_production_at_least_64_characters_long}
+      - RACK_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
 volumes:
   pgdata:
