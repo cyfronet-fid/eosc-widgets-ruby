@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild app/assets/javascript/application.js --bundle --minify --outdir=public/assets",
-    "build:css": "sass app/assets/stylesheets/application.scss public/assets/application.css --load-path=node_modules",
-    "watch": "esbuild app/assets/javascript/application.js --bundle --outdir=public/assets --watch",
-    "dev": "nodemon --watch public/assets --exec 'echo Assets updated'"
+    "build": "esbuild app/assets/javascript/application.js --bundle --minify --outdir=tmp/assets",
+    "build:css": "sass app/assets/stylesheets/application.scss tmp/assets/application.css --load-path=node_modules",
+    "watch": "esbuild app/assets/javascript/application.js --bundle --outdir=tmp/assets --watch",
+    "dev": "nodemon --watch tmp/assets --exec 'echo Assets updated'"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",

@@ -33,22 +33,42 @@
           </td>
           <td>
             <div class="d-flex gap-2">
-              <% Array(fav.links).each do |url| %>
-                <a href="<%= url %>" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+              <% links = Array(fav.links) %>
+              <% if links.size == 1 %>
+                <a href="<%= links.first %>" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+              <% elsif links.size > 1 %>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    View
+                  </button>
+                  <ul class="dropdown-menu">
+                    <% links.each_with_index do |url, index| %>
+                      <li>
+                        <a class="dropdown-item" href="<%= url %>" target="_blank">
+                          Link <%= index + 1 %>
+                          <br>
+                          <small class="text-muted" style="font-size: 0.75rem;"><%= url %></small>
+                        </a>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
               <% end %>
-              <form action="/api/favourites" method="post" class="d-inline" data-turbo-confirm="Are you sure you want to remove this from favourites?">
-                <input type="hidden" name="_method" value="delete">
-                <input type="hidden" name="pid" value="<%= fav.pid %>">
-                <input type="hidden" name="type" value="<%= fav.type %>">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-              </form>
             </div>
+          </td>
+          <td>
+            <form action="/api/favourites" method="post" class="d-inline" data-turbo-confirm="Are you sure you want to remove this from favourites?">
+              <input type="hidden" name="_method" value="delete">
+              <input type="hidden" name="pid" value="<%= fav.pid %>">
+              <input type="hidden" name="type" value="<%= fav.type %>">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+            </form>
           </td>
         </tr>
       <% end %>
       <% if @favourites.empty? %>
         <tr>
-          <td colspan="5" class="text-center py-4 text-muted">
+          <td colspan="6" class="text-center py-4 text-muted">
             You don't have any favourites yet.
           </td>
         </tr>

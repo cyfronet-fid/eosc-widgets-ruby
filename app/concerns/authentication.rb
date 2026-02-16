@@ -47,5 +47,6 @@ module Authentication
   def reset_authentication
     session.delete(:user_id)
     session.delete(:identity_provider_slug)
+    session.delete(:auth)
   end
 end

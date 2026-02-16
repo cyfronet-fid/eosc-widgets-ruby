@@ -4,10 +4,14 @@ import "@hotwired/turbo";
 import TC from "@rolemodel/turbo-confirm";
 
 import ColorController from "./controllers/color_controller";
+import ProfileController from "./controllers/profile_controller";
+import FormRedirectController from "./controllers/form_redirect_controller";
 
 // Shared JavaScript for all widgets
 window.Stimulus = Application.start();
 Stimulus.register("color", ColorController);
+Stimulus.register("profile", ProfileController);
+Stimulus.register("form-redirect", FormRedirectController);
 
 document.addEventListener("turbo:load", () => {
   console.log("EOSC Widgets: app loaded");
