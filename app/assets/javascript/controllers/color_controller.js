@@ -4,16 +4,24 @@ export default class extends Controller {
   static targets = ["color"];
 
   connect() {
-    console.log("LECIMY Z KOLORKAMI");
+    const savedColor = localStorage.getItem("brand-color");
+    if (savedColor) {
+      document.documentElement.style.setProperty("--brand", savedColor);
+    }
+
     const styles = getComputedStyle(document.documentElement);
     const brandColor = styles.getPropertyValue("--brand").trim();
-    this.colorTarget.value = brandColor;
+    
+    if (this.hasColorTarget) {
+      this.colorTarget.value = brandColor;
+    }
   }
 
   changeColor(event) {
     event.preventDefault();
     const newColor = this.colorTarget.value;
     document.documentElement.style.setProperty("--brand", newColor);
+    localStorage.setItem("brand-color", newColor);
   }
 
   flipToDarkMode() {

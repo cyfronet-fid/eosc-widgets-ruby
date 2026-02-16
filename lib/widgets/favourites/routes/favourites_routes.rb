@@ -10,6 +10,25 @@ get '/favourites' do
 end
 
 # Favourites API
+get '/api/favourites' do
+  is_json = request.content_type == 'application/json' || request.accept.any? { |a| a.to_s == 'application/json' }
+  content_type :json if is_json
+
+  unless signed_in?
+    error_msg = { error: 'Unauthorized' }.to_json
+    return is_json ? [401, error_msg] : halt(401, 'Unauthorized')
+  end
+
+  favourites = current_user.favourites.select(:pid, :type, :title, :authors, :links, :best_access_right)
+
+  if is_json
+    favourites.to_json
+  else
+    @favourites = favourites
+    erb :"../../lib/widgets/favourites/views/index"
+  end
+end
+
 post '/api/favourites' do
   is_json = request.content_type == 'application/json' || request.accept.any? { |a| a.to_s == 'application/json' }
   content_type :json if is_json

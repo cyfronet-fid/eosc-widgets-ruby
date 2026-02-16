@@ -41,7 +41,16 @@ get '/auth/:provider/callback' do
     if user.save
       uid_record.update(user: user)
       authenticated_as(user)
+
+      # Update session auth data
       session[:identity_provider_slug] = params[:provider]
+      auth_data = (session[:auth] || {}).to_h
+      auth_data[params[:provider]] = {
+        uid: auth.uid,
+        access_token: auth.credentials&.token
+      }
+      session[:auth] = auth_data
+
       redirect post_authenticating_url
     else
       redirect '/'

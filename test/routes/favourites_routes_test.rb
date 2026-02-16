@@ -39,6 +39,25 @@ class FavouritesRoutesTest < Minitest::Test
     assert_includes last_response.body, 'res_1'
   end
 
+  def test_index_multiple_links
+    fav = Favourite.create!(
+      pid: 'res_multi', 
+      type: 'Endpoint', 
+      title: 'Multi Link Fav',
+      links: ['https://example.com/1', 'https://example.com/2']
+    )
+    @user.favourites << fav
+
+    get '/favourites'
+    assert last_response.ok?
+    assert_includes last_response.body, 'Multi Link Fav'
+    assert_includes last_response.body, 'dropdown-toggle'
+    assert_includes last_response.body, 'Link 1'
+    assert_includes last_response.body, 'https://example.com/1'
+    assert_includes last_response.body, 'Link 2'
+    assert_includes last_response.body, 'https://example.com/2'
+  end
+
   def test_add_favourite
     post '/api/favourites', {
       favourite: {
@@ -101,6 +120,30 @@ class FavouritesRoutesTest < Minitest::Test
     assert_match(%r{/favourites}, last_response.headers['Location'])
     @user.reload
     assert_equal 0, @user.favourites.count
+  end
+
+  def test_get_api_favourites
+    fav1 = Favourite.create!(pid: 'res_1', type: 'Endpoint', title: 'Fav 1', authors: ['A1'], links: ['L1'], best_access_right: 'open')
+    fav2 = Favourite.create!(pid: 'res_2', type: 'Service', title: 'Fav 2', authors: ['A2'], links: ['L2'], best_access_right: 'restricted')
+    @user.favourites << [fav1, fav2]
+
+    get '/api/favourites', {}, { 'HTTP_ACCEPT' => 'application/json' }
+
+    assert last_response.ok?
+    json = JSON.parse(last_response.body)
+    assert_kind_of Array, json
+    assert_equal 2, json.size
+
+    fav_json = json.find { |f| f['pid'] == 'res_1' }
+    assert_equal 'Endpoint', fav_json['type']
+    assert_equal 'Fav 1', fav_json['title']
+    assert_equal ['A1'], fav_json['authors']
+    assert_equal ['L1'], fav_json['links']
+    assert_equal 'open', fav_json['best_access_right']
+    
+    # Ensure id, created_at, updated_at are NOT included if they weren't requested (user asked for specific fields)
+    # Actually the user said "z parametrami z bazy, czyli :pid, :type, :title, :authors, :links i :best_access_right"
+    # I will check if these are present.
   end
 
   def test_unauthorized

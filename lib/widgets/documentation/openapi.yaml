@@ -1,0 +1,226 @@
+openapi: 3.0.3
+info:
+  title: Favourites API
+  description: API for managing user favourites in EOSC Widgets.
+  version: 1.0.0
+servers:
+  - url: /
+paths:
+  /favourites:
+    get:
+      summary: List favourites
+      description: Returns a list of user's favourites. Requires authentication via session or Bearer token.
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of favourites (HTML or JSON depending on Accept header)
+          content:
+            text/html:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Favourite'
+        '401':
+          description: Unauthorized
+        '302':
+          description: Redirect to login if not authenticated (HTML)
+  /profile:
+    get:
+      summary: User profile
+      description: Returns the current user's profile information, including UID and access token.
+      security:
+        - sessionAuth: []
+      responses:
+        '200':
+          description: User profile page (HTML)
+          content:
+            text/html:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+        '302':
+          description: Redirect to login if not authenticated (HTML)
+  /api/favourites:
+    get:
+      summary: List favourites (JSON)
+      description: Returns a list of user's favourites with specific fields. Requires authentication.
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of favourites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavouriteAPI'
+        '401':
+          description: Unauthorized
+    post:
+      summary: Add a favourite
+      description: Adds a new favourite for the current user.
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                favourite:
+                  $ref: '#/components/schemas/FavouriteInput'
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                favourite:
+                  $ref: '#/components/schemas/FavouriteInput'
+      responses:
+        '201':
+          description: Favourite created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favourite'
+        '302':
+          description: Redirect back (for HTML requests)
+        '400':
+          description: Missing parameters
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity (e.g. validation error)
+    delete:
+      summary: Remove a favourite
+      description: Removes a favourite from the current user.
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: pid
+          in: query
+          description: Resource PID (if sent as query parameter)
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Resource type (if sent as query parameter)
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pid:
+                  type: string
+                type:
+                  type: string
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                pid:
+                  type: string
+                type:
+                  type: string
+      responses:
+        '204':
+          description: Favourite removed
+        '302':
+          description: Redirect to /favourites (for HTML requests)
+        '400':
+          description: Missing pid or type
+        '401':
+          description: Unauthorized
+        '404':
+          description: Favourite not found
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: rack.session
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    Favourite:
+      type: object
+      properties:
+        id:
+          type: integer
+        pid:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+        links:
+          type: array
+          items:
+            type: string
+        best_access_right:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    FavouriteInput:
+      type: object
+      required:
+        - pid
+        - type
+      properties:
+        pid:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+        links:
+          type: array
+          items:
+            type: string
+        best_access_right:
+          type: string
+    FavouriteAPI:
+      type: object
+      properties:
+        pid:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+        links:
+          type: array
+          items:
+            type: string
+        best_access_right:
+          type: string

@@ -58,3 +58,5 @@ group :development, :test do
   gem 'rack-unreloader'
   gem 'rubocop'
 end
+
+gem "rackup", "~> 2.3"
