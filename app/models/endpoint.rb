@@ -12,6 +12,12 @@ class Endpoint < ApplicationRecord
   after_save :log_change
   after_destroy :log_change
 
+  def exchange_token(subject_token)
+    # Use pid or slug as audience for the token exchange
+    # Common Keycloak practice is to use client_id as audience
+    identity_provider.exchange_token(subject_token, audience: abbreviation)
+  end
+
   private
 
   def log_change
